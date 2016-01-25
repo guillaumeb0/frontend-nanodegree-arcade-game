@@ -1,11 +1,65 @@
+// Map information
+var Map = function(){
+    this.tileInfo = {
+        w: 101,
+        h: 83
+    };
+    this.mapInfo = {
+        w: 505,
+        h: 606,
+        numRow: 5,
+        numCol: 6
+    };
+
+};
+Map.instance = null;
+Map.getInstance = function(){
+    if (this.instance === null)
+        this.instance = new Map();
+    return this.instance;
+};
+Map.prototype.getCoordinates = function(row, col) {
+    if (row === 0)
+        return {
+            x: col * 101,
+            y: row * 133,
+            w: 101,
+            h: 133
+        };
+    else if (row === 5)
+        return {
+            x: col * 101,
+            y: 133 + (row-1) * 83,
+            w: 101,
+            h: 121
+        };
+    else
+        return {
+            x: col * 101,
+            y: 133 + (row-1) * 83,
+            w: 101,
+            h: 83
+        };
+};
+
 // Enemies our player must avoid
-var Enemy = function() {
+var Enemy = function(row) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
+    var map = Map.getInstance();
+    var coordinates = map.getCoordinates(row, 0);
     this.sprite = 'images/enemy-bug.png';
+    this.body.w = 101;
+    this.body.h = 67;
+    this.body.spaceTop = 77;
+    this.body.spaceBottom = 27;
+    this.x = 0;
+    this.y = coordinates.y;
+    this.w = 101;
+    this.h = 83;
 };
 
 // Update the enemy's position, required method for game
@@ -24,12 +78,28 @@ Enemy.prototype.render = function() {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
+function Player(){
 
+}
+
+Player.prototype.update = function(dt){
+
+};
+
+Player.prototype.render = function(){
+
+};
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
+var allEnemies;
+var player;
 
+document.addEventListener('DOMContentLoaded', function () {
+    allEnemies = [new Enemy(1), new Enemy(2)];
+    player = new Player();
+})
 
 
 // This listens for key presses and sends the keys to your

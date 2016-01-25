@@ -13,7 +13,6 @@
  * the canvas' context (ctx) object globally available to make writing app.js
  * a little simpler to work with.
  */
-
 var Engine = (function(global) {
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
@@ -25,8 +24,9 @@ var Engine = (function(global) {
         ctx = canvas.getContext('2d'),
         lastTime;
 
-    canvas.width = 505;
-    canvas.height = 606;
+    var map = Map.getInstance();
+    canvas.width = map.mapInfo.w;
+    canvas.height = map.mapInfo.h;
     doc.body.appendChild(canvas);
 
     /* This function serves as the kickoff point for the game loop itself
@@ -136,6 +136,24 @@ var Engine = (function(global) {
             }
         }
 
+        /* TODO: remove ! */
+        /* test !!! */
+        ctx.save();
+        ctx.lineWidth = 3;
+        for (row = 0; row < numRows; row++) {
+            for (col = 0; col < numCols; col++) {
+                //if (row === 0)
+                //    ctx.strokeRect(col * 101, row * 133, 101, 133);
+                //else if (row === 5)
+                //    ctx.strokeRect(col * 101, 133 + (row-1) * 83, 101, 121);
+                //else
+                //    ctx.strokeRect(col * 101, 133 + (row-1) * 83, 101, 83);
+                ctx.strokeRect(col * 101, row * 83, 101, 83);
+            }
+        }
+        ctx.restore();
+        /* TODO: remove !!! */
+        /* end test */
         renderEntities();
     }
 
