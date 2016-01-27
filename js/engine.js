@@ -142,13 +142,30 @@ var Engine = (function(global) {
         ctx.lineWidth = 3;
         for (row = 0; row < numRows; row++) {
             for (col = 0; col < numCols; col++) {
-                //if (row === 0)
-                //    ctx.strokeRect(col * 101, row * 133, 101, 133);
-                //else if (row === 5)
-                //    ctx.strokeRect(col * 101, 133 + (row-1) * 83, 101, 121);
-                //else
-                //    ctx.strokeRect(col * 101, 133 + (row-1) * 83, 101, 83);
-                ctx.strokeRect(col * 101, row * 83, 101, 83);
+                if (row === 0)
+                    ctx.strokeRect(col * 101, row * 133, 101, 133);
+                else if (row === 5)
+                    ctx.strokeRect(col * 101, 133 + (row-1) * 83, 101, 121);
+                else
+                    ctx.strokeRect(col * 101, 133 + (row-1) * 83, 101, 83);
+
+
+                //switch (row){
+                //    case 0: ctx.strokeStyle = 'black';
+                //        break;
+                //    case 1: ctx.strokeStyle = 'purple';
+                //        break;
+                //    case 2: ctx.strokeStyle = 'yellow';
+                //        break;
+                //    case 3: ctx.strokeStyle = 'green';
+                //        break;
+                //    case 4: ctx.strokeStyle = 'blue';
+                //        break;
+                //    case 5: ctx.strokeStyle = 'orange';
+                //        break;
+                //
+                //}
+                //ctx.strokeRect(col * 101, row * 83, 101, 83);
             }
         }
         ctx.restore();

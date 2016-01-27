@@ -52,14 +52,30 @@ var Enemy = function(row) {
     var map = Map.getInstance();
     var coordinates = map.getCoordinates(row, 0);
     this.sprite = 'images/enemy-bug.png';
-    this.body.w = 101;
-    this.body.h = 67;
-    this.body.spaceTop = 77;
-    this.body.spaceBottom = 27;
+    this.body = {
+        w: 101,
+        h: 67,
+        spaceTop: 77,
+        spaceBottom: 27
+    };
     this.x = 0;
-    this.y = coordinates.y;
+    this.y = coordinates.y - this.body.spaceTop;
     this.w = 101;
     this.h = 83;
+};
+
+Enemy.prototype.getHitBox = function() {
+    var left = this.x;
+    var right = this.x + this.w;
+    var top = this.y + this.body.spaceTop;
+    var bottom = this.y + this.h - this.body.bottom;
+
+    return {
+        left: left,
+        right: right,
+        top: top,
+        bottom: bottom
+    };
 };
 
 // Update the enemy's position, required method for game
@@ -79,6 +95,21 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 function Player(){
+    var map = Map.getInstance();
+    var coordinates = map.getCoordinates(5, 2);
+    this.sprite = 'images/char-boy.png';
+
+    this.body = {
+        w: 101,
+        h: 78,
+        topSpace: 63,
+        bottomSpace: 31
+    };
+
+    this.x = coordinates.x;
+    this.y = coordinates.y - this.body.topSpace;
+    this.w = 101;
+    this.h = 83;
 
 }
 
@@ -87,7 +118,14 @@ Player.prototype.update = function(dt){
 };
 
 Player.prototype.render = function(){
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 
+    // TODO: remove when final push
+    //ctx.save();
+    //ctx.lineWidth = 5;
+    //ctx.strokeStyle = 'red';
+    //ctx.strokeRect(this.x, this.y, this.w, this.h);
+    //ctx.restore();
 };
 
 // Now instantiate your objects.
@@ -97,7 +135,7 @@ var allEnemies;
 var player;
 
 document.addEventListener('DOMContentLoaded', function () {
-    allEnemies = [new Enemy(1), new Enemy(2)];
+    allEnemies = [new Enemy(1), new Enemy(2), new Enemy(3)];
     player = new Player();
 })
 
