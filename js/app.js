@@ -1,4 +1,7 @@
-// Map information
+/**
+ * Represents information about the map.
+ * @constructor
+ */
 var Map = function(){
     this.tileInfo = {
         w: 101,
@@ -10,8 +13,8 @@ var Map = function(){
         numRow: 5,
         numCol: 6
     };
-
 };
+
 Map.instance = null;
 Map.getInstance = function(){
     if (this.instance === null)
@@ -42,7 +45,11 @@ Map.prototype.getCoordinates = function(row, col) {
         };
 };
 
-// Enemies our player must avoid
+/**
+ * Represents enemies our player must avoid
+ * @constructor
+ * @param {int} row - The row on which we want the enemy to appear.
+ */
 var Enemy = function(row) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
@@ -52,14 +59,24 @@ var Enemy = function(row) {
     var map = Map.getInstance();
     var coordinates = map.getCoordinates(row, 0);
     this.sprite = 'images/enemy-bug.png';
-    this.body.w = 101;
-    this.body.h = 67;
-    this.body.spaceTop = 77;
-    this.body.spaceBottom = 27;
-    this.x = 0;
-    this.y = coordinates.y;
-    this.w = 101;
-    this.h = 83;
+    this.body = {               // Information about the sprite
+        w: 101,                 // The width of the "bug" part of the sprite
+        h: 67,                  // The height of the "bug" part of the sprite
+        spaceTop: 77,           // Space above the "bug" part of the sprite
+        spaceBottom: 27,        // Space below the "bug" part of the sprite
+        getX: function(){
+            return 'toto';
+        },
+        getLeft: () => { return this.x; },      // Return the "hitbox" left of the sprite
+        getRight: () => { return this.x + this.body.w; },       // Return the "hitbox" right of the sprite
+        getTop: () => { return this.y + this.body.spaceTop; },      // Return the "hitbox" top of the sprite
+        getBottom: () => { return this.y + this.body.spaceTop + this.body.h; }, // Return the "hitbox" bottom of the sprite
+    };
+    this.x = 0;                 // X coordinate of the sprite
+    this.y = coordinates.y - this.body.spaceTop;    // Y coordinate of the sprite
+    this.w = 101;               // Width of the sprite
+    this.h = 83;                // Height of the sprite
+    this.velocity = 5;
 };
 
 // Update the enemy's position, required method for game
@@ -68,6 +85,7 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+
 };
 
 // Draw the enemy on the screen, required method for game
@@ -97,9 +115,9 @@ var allEnemies;
 var player;
 
 document.addEventListener('DOMContentLoaded', function () {
-    allEnemies = [new Enemy(1), new Enemy(2)];
+    allEnemies = [new Enemy(1), new Enemy(2), new Enemy(3)];
     player = new Player();
-})
+});
 
 
 // This listens for key presses and sends the keys to your

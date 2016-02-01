@@ -142,13 +142,13 @@ var Engine = (function(global) {
         ctx.lineWidth = 3;
         for (row = 0; row < numRows; row++) {
             for (col = 0; col < numCols; col++) {
-                //if (row === 0)
-                //    ctx.strokeRect(col * 101, row * 133, 101, 133);
-                //else if (row === 5)
-                //    ctx.strokeRect(col * 101, 133 + (row-1) * 83, 101, 121);
-                //else
-                //    ctx.strokeRect(col * 101, 133 + (row-1) * 83, 101, 83);
-                ctx.strokeRect(col * 101, row * 83, 101, 83);
+                if (row === 0)
+                    ctx.strokeRect(col * 101, row * 133, 101, 133);
+                else if (row === 5)
+                    ctx.strokeRect(col * 101, 133 + (row-1) * 83, 101, 121);
+                else
+                    ctx.strokeRect(col * 101, 133 + (row-1) * 83, 101, 83);
+                //ctx.strokeRect(col * 101, row * 83, 101, 83);
             }
         }
         ctx.restore();
