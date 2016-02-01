@@ -148,6 +148,7 @@ var Engine = (function(global) {
                     ctx.strokeRect(col * 101, 133 + (row-1) * 83, 101, 121);
                 else
                     ctx.strokeRect(col * 101, 133 + (row-1) * 83, 101, 83);
+
                 //ctx.strokeRect(col * 101, row * 83, 101, 83);
             }
         }
