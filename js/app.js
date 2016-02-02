@@ -49,8 +49,9 @@ Map.prototype.getCoordinates = function(row, col) {
  * Represents enemies our player must avoid
  * @constructor
  * @param {int} row - The row on which we want the enemy to appear.
+ * @param {int} velocity - The speed at which we want the enemy to move.
  */
-var Enemy = function(row) {
+var Enemy = function(row, velocity) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
@@ -59,6 +60,8 @@ var Enemy = function(row) {
     var map = Map.getInstance();
     var coordinates = map.getCoordinates(row, 0);
     this.sprite = 'images/enemy-bug.png';
+
+    this.velocity = velocity || 300;    // if velocity isn't define, set a default value
     this.body = {               // Information about the sprite
         w: 101,                 // The width of the "bug" part of the sprite
         h: 67,                  // The height of the "bug" part of the sprite
@@ -72,26 +75,21 @@ var Enemy = function(row) {
         getTop: () => { return this.y + this.body.spaceTop; },      // Return the "hitbox" top of the sprite
         getBottom: () => { return this.y + this.body.spaceTop + this.body.h; }, // Return the "hitbox" bottom of the sprite
     };
-    this.x = 0;                 // X coordinate of the sprite
-    this.y = coordinates.y - this.body.spaceTop;    // Y coordinate of the sprite
     this.w = 101;               // Width of the sprite
+    this.initialPos = 0 - this.w;
+    this.x = 0;                 // X coordinate of the sprite
+    this.y = 0;                 // Y coordinate of the sprite
     this.h = 83;                // Height of the sprite
-    this.velocity = 5;
+    this.resetPos(row);
 };
 
-Enemy.prototype.getHitBox = function() {
-    var left = this.x;
-    var right = this.x + this.w;
-    var top = this.y + this.body.spaceTop;
-    var bottom = this.y + this.h - this.body.bottom;
-
-    return {
-        left: left,
-        right: right,
-        top: top,
-        bottom: bottom
-    };
+Enemy.prototype.resetPos = function(row) {
+    var map = Map.getInstance();
+    var coordinates = map.getCoordinates(row, 0);
+    this.x = this.initialPos;
+    this.y = coordinates.y - this.body.spaceTop;
 };
+
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -99,7 +97,11 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    var map = Map.getInstance();
+    if (this.x > map.mapInfo.w)
+        this.resetPos((Math.floor((Math.random() * 10)) % 3) + 1);
 
+    this.x = this.x + this.velocity * dt;
 };
 
 // Draw the enemy on the screen, required method for game
@@ -126,7 +128,6 @@ function Player(){
     this.y = coordinates.y - this.body.topSpace;
     this.w = 101;
     this.h = 83;
-
 }
 
 Player.prototype.update = function(dt){
@@ -151,7 +152,7 @@ var allEnemies;
 var player;
 
 document.addEventListener('DOMContentLoaded', function () {
-    allEnemies = [new Enemy(1), new Enemy(2), new Enemy(3)];
+    allEnemies = [new Enemy(1), new Enemy(2, 500), new Enemy(3, 400)];
     player = new Player();
 });
 
