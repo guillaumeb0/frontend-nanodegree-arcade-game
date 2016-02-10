@@ -174,7 +174,6 @@ Player.prototype.moveDown = function() {
 };
 
 Player.prototype.handleInput = function(direction) {
-    console.log(direction);
     switch (direction){
         case 'left':
             this.moveLeft();
