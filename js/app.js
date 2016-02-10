@@ -113,8 +113,7 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 function Player(){
-    var map = Map.getInstance();
-    var coordinates = map.getCoordinates(5, 2);
+
     this.sprite = 'images/char-boy.png';
 
     this.body = {
@@ -128,8 +127,7 @@ function Player(){
         getBottom: () => { return this.y + this.body.spaceTop + this.body.h; } // Return the "hitbox" bottom of the sprite
     };
 
-    this.x = coordinates.x;
-    this.y = coordinates.y - this.body.spaceTop;
+    this.resetPos();
     this.w = 101;
     this.h = 83;
 }
@@ -149,28 +147,53 @@ Player.prototype.render = function(){
     //ctx.restore();
 };
 
+Player.prototype.resetPos = function() {
+    var map = Map.getInstance();
+    var coordinates = map.getCoordinates(5, 2);
+
+    this.x = coordinates.x;
+    this.y = coordinates.y - this.body.spaceTop;
+};
+
+Player.prototype.checkVictory = function() {
+    if (this.y < 0)
+        return true;
+};
+
 Player.prototype.moveLeft = function() {
     var map = Map.getInstance();
     if (this.body.getLeft() - map.tileInfo.w >= 0 )     // Prevent the player to go outside the map
         this.x -= map.tileInfo.w;
+
+    if (this.checkVictory())
+        this.resetPos();
 };
 
 Player.prototype.moveUp = function() {
     var map = Map.getInstance();
     if (this.body.getTop() - map.tileInfo.h >= 0)       // Prevent the player to go outside the map
         this.y -= Map.getInstance().tileInfo.h;
+
+    if (this.checkVictory())
+        this.resetPos();
 };
 
 Player.prototype.moveRight = function() {
     var map = Map.getInstance();
     if (this.body.getRight() + map.tileInfo.w <= map.mapInfo.w) // Prevent the player to go outside the map
         this.x += Map.getInstance().tileInfo.w;
+
+    if (this.checkVictory())
+        this.resetPos();
 };
 
 Player.prototype.moveDown = function() {
     var map = Map.getInstance();
     if (this.body.getBottom() + map.tileInfo.h <= map.mapInfo.h)        // Prevent the player to go outside the map
         this.y += Map.getInstance().tileInfo.h;
+
+    if (this.checkVictory())
+        this.resetPos();
 };
 
 Player.prototype.handleInput = function(direction) {
