@@ -120,12 +120,16 @@ function Player(){
     this.body = {
         w: 101,
         h: 78,
-        topSpace: 63,
-        bottomSpace: 31
+        spaceTop: 63,
+        spaceBottom: 31,
+        getLeft: () => { return this.x; },      // Return the "hitbox" left of the sprite
+        getRight: () => { return this.x + this.body.w; },       // Return the "hitbox" right of the sprite
+        getTop: () => { return this.y + this.body.spaceTop; },      // Return the "hitbox" top of the sprite
+        getBottom: () => { return this.y + this.body.spaceTop + this.body.h; } // Return the "hitbox" bottom of the sprite
     };
 
     this.x = coordinates.x;
-    this.y = coordinates.y - this.body.topSpace;
+    this.y = coordinates.y - this.body.spaceTop;
     this.w = 101;
     this.h = 83;
 }
@@ -143,6 +147,48 @@ Player.prototype.render = function(){
     //ctx.strokeStyle = 'red';
     //ctx.strokeRect(this.x, this.y, this.w, this.h);
     //ctx.restore();
+};
+
+Player.prototype.moveLeft = function() {
+    var map = Map.getInstance();
+    if (this.body.getLeft() - map.tileInfo.w >= 0 )     // Prevent the player to go outside the map
+        this.x -= map.tileInfo.w;
+};
+
+Player.prototype.moveUp = function() {
+    var map = Map.getInstance();
+    if (this.body.getTop() - map.tileInfo.h >= 0)       // Prevent the player to go outside the map
+        this.y -= Map.getInstance().tileInfo.h;
+};
+
+Player.prototype.moveRight = function() {
+    var map = Map.getInstance();
+    if (this.body.getRight() + map.tileInfo.w <= map.mapInfo.w) // Prevent the player to go outside the map
+        this.x += Map.getInstance().tileInfo.w;
+};
+
+Player.prototype.moveDown = function() {
+    var map = Map.getInstance();
+    if (this.body.getBottom() + map.tileInfo.h <= map.mapInfo.h)        // Prevent the player to go outside the map
+        this.y += Map.getInstance().tileInfo.h;
+};
+
+Player.prototype.handleInput = function(direction) {
+    console.log(direction);
+    switch (direction){
+        case 'left':
+            this.moveLeft();
+            break;
+        case 'up':
+            this.moveUp();
+            break;
+        case 'right':
+            this.moveRight();
+            break;
+        case 'down':
+            this.moveDown();
+            break;
+    }
 };
 
 // Now instantiate your objects.
@@ -167,5 +213,6 @@ document.addEventListener('keyup', function(e) {
         40: 'down'
     };
 
-    player.handleInput(allowedKeys[e.keyCode]);
+    if (e.keyCode in allowedKeys)
+        player.handleInput(allowedKeys[e.keyCode]);
 });
