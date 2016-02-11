@@ -155,6 +155,8 @@ var Engine = (function(global) {
         ctx.restore();
         /* TODO: remove !!! */
         /* end test */
+        if (victory)
+            printVictory();
         renderEntities();
     }
 

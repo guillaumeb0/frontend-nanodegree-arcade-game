@@ -1,3 +1,5 @@
+var victory = false;
+
 /**
  * Represents information about the map.
  * @constructor
@@ -137,6 +139,7 @@ function Player(){
 
     this.sprite = 'images/char-boy.png';
 
+    this.isMouvementEnabled = true;
     this.body = {
         w: 101,
         h: 78,
@@ -187,7 +190,7 @@ Player.prototype.moveLeft = function() {
         this.x -= map.tileInfo.w;
 
     if (this.checkVictory())
-        this.resetPos();
+        setVictory(true);
 };
 
 Player.prototype.moveUp = function() {
@@ -196,7 +199,7 @@ Player.prototype.moveUp = function() {
         this.y -= Map.getInstance().tileInfo.h;
 
     if (this.checkVictory())
-        this.resetPos();
+        setVictory(true);
 };
 
 Player.prototype.moveRight = function() {
@@ -205,7 +208,7 @@ Player.prototype.moveRight = function() {
         this.x += Map.getInstance().tileInfo.w;
 
     if (this.checkVictory())
-        this.resetPos();
+        setVictory(true);
 };
 
 Player.prototype.moveDown = function() {
@@ -214,10 +217,17 @@ Player.prototype.moveDown = function() {
         this.y += Map.getInstance().tileInfo.h;
 
     if (this.checkVictory())
-        this.resetPos();
+        setVictory(true);
+};
+
+Player.prototype.enableMouvement = function(bool) {
+    this.isMouvementEnabled = bool;
 };
 
 Player.prototype.handleInput = function(direction) {
+    if (!this.isMouvementEnabled)
+        return;
+
     switch (direction){
         case 'left':
             this.moveLeft();
@@ -258,3 +268,30 @@ document.addEventListener('keyup', function(e) {
     if (e.keyCode in allowedKeys)
         player.handleInput(allowedKeys[e.keyCode]);
 });
+
+function printVictory() {
+    var map = Map.getInstance();
+    ctx.save();
+    ctx.fillStyle = "white";
+    ctx.strokeStyle = "black";
+    ctx.font = "36pt Impact";
+    ctx.textAlign = 'center';
+    ctx.lineWidth = 3;
+    ctx.fillText('You win !', map.mapInfo.w / 2, map.mapInfo.h / 2);
+    ctx.strokeText('You win !', map.mapInfo.w / 2, map.mapInfo.h / 2);
+    ctx.restore();
+}
+
+function setVictory(bool) {
+    if (bool) {
+        victory = true;
+        player.enableMouvement(false);
+        setTimeout(function() {
+            setVictory(false);
+            player.resetPos();
+        }, 3000);
+    } else {
+        victory = false;
+        player.enableMouvement(true);
+    }
+}
