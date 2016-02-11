@@ -63,7 +63,7 @@ var Enemy = function(row, velocity) {
 
     this.velocity = velocity || 300;    // if velocity isn't define, set a default value
     this.body = {               // Information about the sprite
-        w: 101,                 // The width of the "bug" part of the sprite
+        w: 69,                 // The width of the "bug" part of the sprite
         h: 67,                  // The height of the "bug" part of the sprite
         spaceTop: 77,           // Space above the "bug" part of the sprite
         spaceBottom: 27,        // Space below the "bug" part of the sprite
