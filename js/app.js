@@ -90,6 +90,23 @@ Enemy.prototype.resetPos = function(row) {
     this.y = coordinates.y - this.body.spaceTop;
 };
 
+Enemy.prototype.isColliding = function() {
+    if
+    (
+        (
+            (player.body.getLeft() >= this.body.getLeft() && player.body.getLeft() <= this.body.getRight()) ||
+            (player.body.getLeft() <= this.body.getLeft() && player.body.getRight() >= this.body.getRight())
+        )
+        &&
+        (
+            (player.body.getTop() >= this.body.getTop() && player.body.getTop() <= this.body.getBottom()) ||
+            (player.body.getTop() <= this.body.getTop() && player.body.getBottom() >= this.body.getTop())
+        )
+    )
+        return true;
+
+    return false;
+};
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -98,6 +115,10 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     var map = Map.getInstance();
+
+    if (this.isColliding())
+        player.resetPos();
+
     if (this.x > map.mapInfo.w)
         this.resetPos((Math.floor((Math.random() * 10)) % 3) + 1);
 
@@ -223,7 +244,6 @@ document.addEventListener('DOMContentLoaded', function () {
     allEnemies = [new Enemy(1), new Enemy(2, 500), new Enemy(3, 400)];
     player = new Player();
 });
-
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
