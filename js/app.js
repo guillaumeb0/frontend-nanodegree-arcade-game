@@ -1,8 +1,8 @@
-var victory = false;
-var collectedStar = 0;
+var victory = false;        // boolean for tracking the victory state
+var collectedStar = 0;      // track the amount of star collected by the player
 
 /**
- * Represents information about the map.
+ * @description Represents information about the map
  * @constructor
  */
 var Map = function(){
@@ -19,11 +19,23 @@ var Map = function(){
 };
 
 Map.instance = null;
+
+/**
+ * @description Return a unique map instance
+ * @returns {Map}
+ */
 Map.getInstance = function(){
     if (this.instance === null)
         this.instance = new Map();
     return this.instance;
 };
+
+/**
+ * @description Convert a (row,col) in (x,y) coordinates
+ * @param {number} row - The row on the map's grid
+ * @param {number} col - The column on the map's grid
+ * @returns {{x: number, y: number, w: number, h: number}}
+ */
 Map.prototype.getCoordinates = function(row, col) {
     if (row === 0)
         return {
@@ -49,10 +61,10 @@ Map.prototype.getCoordinates = function(row, col) {
 };
 
 /**
- * Represents enemies our player must avoid
+ * @description Represents enemies our player must avoid
  * @constructor
- * @param {int} row - The row on which we want the enemy to appear.
- * @param {int} velocity - The speed at which we want the enemy to move.
+ * @param {int} row - The row on which we want the enemy to appear
+ * @param {int} velocity - The speed at which we want the enemy to move
  */
 var Enemy = function(row, velocity) {
     // Variables applied to each of our instances go here,
@@ -79,13 +91,17 @@ var Enemy = function(row, velocity) {
         getBottom: () => { return this.y + this.body.spaceTop + this.body.h; }, // Return the "hitbox" bottom of the sprite
     };
     this.w = 101;               // Width of the sprite
-    this.initialPos = 0 - this.w;
+    this.initialPos = 0 - this.w;   // The initial position of the enemy
     this.x = 0;                 // X coordinate of the sprite
     this.y = 0;                 // Y coordinate of the sprite
     this.h = 83;                // Height of the sprite
     this.resetPos(row);
 };
 
+/**
+ * @description Re-set this enemy's position to the left of the screen, at the given row
+ * @param {number} row - Row on which to position this enemy
+ */
 Enemy.prototype.resetPos = function(row) {
     var map = Map.getInstance();
     var coordinates = map.getCoordinates(row, 0);
@@ -93,6 +109,9 @@ Enemy.prototype.resetPos = function(row) {
     this.y = coordinates.y - this.body.spaceTop;
 };
 
+/**
+ * @description Check if this enemy and the player are colliding
+ */
 Enemy.prototype.isColliding = function() {
     return areColliding(player, this);
 };
@@ -143,21 +162,16 @@ function Player(){
     this.h = 83;
 }
 
-Player.prototype.update = function(dt){
-
-};
-
+/**
+ * @description Draw the player on the screen
+ */
 Player.prototype.render = function(){
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-
-    // TODO: remove when final push
-    //ctx.save();
-    //ctx.lineWidth = 5;
-    //ctx.strokeStyle = 'red';
-    //ctx.strokeRect(this.x, this.y, this.w, this.h);
-    //ctx.restore();
 };
 
+/**
+ * @description Re-set the player's position to the bottom of the map
+ */
 Player.prototype.resetPos = function() {
     var map = Map.getInstance();
     var coordinates = map.getCoordinates(5, 2);
@@ -166,11 +180,18 @@ Player.prototype.resetPos = function() {
     this.y = coordinates.y - this.body.spaceTop;
 };
 
+/**
+ * @description Check victory conditions
+ * @returns {boolean}
+ */
 Player.prototype.checkVictory = function() {
     if (this.y < 0)
         return true;
 };
 
+/**
+ * @description Make the player move 1 tile to the left
+ */
 Player.prototype.moveLeft = function() {
     var map = Map.getInstance();
     if (this.body.getLeft() - map.tileInfo.w >= 0 )     // Prevent the player to go outside the map
@@ -180,6 +201,9 @@ Player.prototype.moveLeft = function() {
         setVictory(true);
 };
 
+/**
+ * @description Make the player move 1 tile top
+ */
 Player.prototype.moveUp = function() {
     var map = Map.getInstance();
     if (this.body.getTop() - map.tileInfo.h >= 0)       // Prevent the player to go outside the map
@@ -189,6 +213,9 @@ Player.prototype.moveUp = function() {
         setVictory(true);
 };
 
+/**
+ * @description Make the player move 1 tile to the right
+ */
 Player.prototype.moveRight = function() {
     var map = Map.getInstance();
     if (this.body.getRight() + map.tileInfo.w <= map.mapInfo.w) // Prevent the player to go outside the map
@@ -198,6 +225,9 @@ Player.prototype.moveRight = function() {
         setVictory(true);
 };
 
+/**
+ * @description Make the player move 1 tile down
+ */
 Player.prototype.moveDown = function() {
     var map = Map.getInstance();
     if (this.body.getBottom() + map.tileInfo.h <= map.mapInfo.h)        // Prevent the player to go outside the map
@@ -207,10 +237,18 @@ Player.prototype.moveDown = function() {
         setVictory(true);
 };
 
+/**
+ * @description Enable or disable the ability of the player to move
+ * @param {boolean} bool
+ */
 Player.prototype.enableMouvement = function(bool) {
     this.isMouvementEnabled = bool;
 };
 
+/**
+ * @description Handle movements logic when the user press a key
+ * @param {string} direction
+ */
 Player.prototype.handleInput = function(direction) {
     if (!this.isMouvementEnabled)
         return;
@@ -231,6 +269,10 @@ Player.prototype.handleInput = function(direction) {
     }
 };
 
+/**
+ * @description Represent an item to collect by the player
+ * @constructor
+ */
 function Star() {
     var map = Map.getInstance();
     var row = (Math.floor(Math.random() * 10) % 3) + 1;
@@ -255,15 +297,25 @@ function Star() {
     this.sprite = 'images/Star.png';
 }
 
+/**
+ * @description Behavior logic of the star
+ * @param dt
+ */
 Star.prototype.update = function(dt) {
     if (this.isColliding())
         collectStar();
 };
 
+/**
+ * @description Draw this star on the screen
+ */
 Star.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+/**
+ * @description Check if this star and the player are colliding
+ */
 Star.prototype.isColliding = function() {
     return areColliding(player, this);
 };
@@ -275,6 +327,9 @@ var allEnemies;
 var player;
 var items;
 
+/**
+ * @description Create entities when the dom is ready
+ */
 document.addEventListener('DOMContentLoaded', function () {
     allEnemies = [new Enemy(1), new Enemy(2, 500), new Enemy(3, 400)];
     player = new Player();
@@ -295,6 +350,9 @@ document.addEventListener('keyup', function(e) {
         player.handleInput(allowedKeys[e.keyCode]);
 });
 
+/**
+ * @description Print the collected star score
+ */
 function printScore() {
     var map = Map.getInstance();
 
@@ -302,6 +360,9 @@ function printScore() {
     ctx.strokeText('Score: ' + collectedStar, map.mapInfo.w, map.mapInfo.h / 10);
 }
 
+/**
+ * @description When the game is in victory state, this function is used for printing the victory message
+ */
 function printVictory() {
     var map = Map.getInstance();
 
@@ -312,6 +373,10 @@ function printVictory() {
     ctx.restore();
 }
 
+/**
+ * @description Set the victory state of the game
+ * @param {boolean} bool
+ */
 function setVictory(bool) {
     if (bool) {
         victory = true;
@@ -327,14 +392,23 @@ function setVictory(bool) {
     }
 }
 
+/**
+ * @description Increment the amount of star collected and remove the current/create the new star
+ * @param star
+ */
 function collectStar(star) {
     collectedStar += 1;
-    console.log(collectedStar);
     var index = items.indexOf(star);
     items.splice(index, 1);
     items.push(new Star());
-};
+}
 
+/**
+ * @description Detect if 2 entities are colliding
+ * @param {entity} e1
+ * @param {entity} e2
+ * @returns {boolean}
+ */
 function areColliding(e1, e2) {
     if
     (
