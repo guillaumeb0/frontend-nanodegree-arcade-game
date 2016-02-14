@@ -1,4 +1,5 @@
 var victory = false;
+var collectedStar = 0;
 
 /**
  * Represents information about the map.
@@ -256,16 +257,43 @@ function Star() {
 
     this.body = {
         h: 69,
-        w: 101,
+        w: 100,
         spaceTop: 66,
-        spaceBottom: 36
+        spaceBottom: 36,
+        getLeft: () =>  { return this.x; },
+        getRight: () => { return this.x + this.body.w; },
+        getTop: () => { return this.y + this.body.spaceTop; },
+        getBottom: () => { return this.y + this.body.spaceTop + this.body.h; }
     };
 
     this.sprite = 'images/Star.png';
 }
 
+Star.prototype.update = function(dt) {
+    if (this.isColliding())
+        collectStar();
+};
+
 Star.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+Star.prototype.isColliding = function() {
+    if
+    (
+        (
+            (player.body.getLeft() >= this.body.getLeft() && player.body.getLeft() <= this.body.getRight()) ||
+            (player.body.getLeft() <= this.body.getLeft() && player.body.getRight() >= this.body.getRight())
+        )
+        &&
+        (
+            (player.body.getTop() >= this.body.getTop() && player.body.getTop() <= this.body.getBottom()) ||
+            (player.body.getTop() <= this.body.getTop() && player.body.getBottom() >= this.body.getTop())
+        )
+    )
+        return true;
+
+    return false;
 };
 
 // Now instantiate your objects.
@@ -321,3 +349,11 @@ function setVictory(bool) {
         player.enableMouvement(true);
     }
 }
+
+function collectStar(star) {
+    collectedStar += 1;
+    console.log(collectedStar);
+    var index = items.indexOf(star);
+    items.splice(index, 1);
+    items.push(new Star());
+};
