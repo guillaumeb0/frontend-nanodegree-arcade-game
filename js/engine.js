@@ -98,7 +98,6 @@ var Engine = (function(global) {
         items.forEach(function(item){
             item.update(dt);
         });
-        player.update();
     }
 
     /* This function initially draws the "game level", it will then call
