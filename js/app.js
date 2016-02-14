@@ -244,15 +244,41 @@ Player.prototype.handleInput = function(direction) {
     }
 };
 
+function Star() {
+    var map = Map.getInstance();
+    var row = (Math.floor(Math.random() * 10) % 3) + 1;
+    var col = (Math.floor(Math.random() * 10) % 5);
+    var offsetTop = 60;         // offset needed for having a relevant printing of the sprite
+
+    var coordinates = map.getCoordinates(row, col);
+    this.x = coordinates.x;
+    this.y = coordinates.y - offsetTop;
+
+    this.body = {
+        h: 69,
+        w: 101,
+        spaceTop: 66,
+        spaceBottom: 36
+    };
+
+    this.sprite = 'images/Star.png';
+}
+
+Star.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 var allEnemies;
 var player;
+var items;
 
 document.addEventListener('DOMContentLoaded', function () {
     allEnemies = [new Enemy(1), new Enemy(2, 500), new Enemy(3, 400)];
     player = new Player();
+    items = [new Star()];
 });
 
 // This listens for key presses and sends the keys to your
