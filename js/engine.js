@@ -65,6 +65,7 @@ var Engine = (function(global) {
      */
     function init() {
         reset();
+        setTextStyle();
         lastTime = Date.now();
         main();
     }
@@ -160,6 +161,7 @@ var Engine = (function(global) {
         /* end test */
         if (victory)
             printVictory();
+        printScore();
         renderEntities();
     }
 
@@ -210,3 +212,11 @@ var Engine = (function(global) {
      */
     global.ctx = ctx;
 })(this);
+
+function setTextStyle() {
+    ctx.fillStyle = "white";
+    ctx.strokeStyle = "black";
+    ctx.font = "36pt Impact";
+    ctx.textAlign = 'right';
+    ctx.lineWidth = 3;
+}

@@ -295,14 +295,18 @@ document.addEventListener('keyup', function(e) {
         player.handleInput(allowedKeys[e.keyCode]);
 });
 
+function printScore() {
+    var map = Map.getInstance();
+
+    ctx.fillText('Score: ' + collectedStar, map.mapInfo.w, map.mapInfo.h / 10);
+    ctx.strokeText('Score: ' + collectedStar, map.mapInfo.w, map.mapInfo.h / 10);
+}
+
 function printVictory() {
     var map = Map.getInstance();
+
     ctx.save();
-    ctx.fillStyle = "white";
-    ctx.strokeStyle = "black";
-    ctx.font = "36pt Impact";
     ctx.textAlign = 'center';
-    ctx.lineWidth = 3;
     ctx.fillText('You win !', map.mapInfo.w / 2, map.mapInfo.h / 2);
     ctx.strokeText('You win !', map.mapInfo.w / 2, map.mapInfo.h / 2);
     ctx.restore();
@@ -318,6 +322,7 @@ function setVictory(bool) {
         }, 3000);
     } else {
         victory = false;
+        collectedStar = 0;
         player.enableMouvement(true);
     }
 }
