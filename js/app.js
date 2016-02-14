@@ -94,21 +94,7 @@ Enemy.prototype.resetPos = function(row) {
 };
 
 Enemy.prototype.isColliding = function() {
-    if
-    (
-        (
-            (player.body.getLeft() >= this.body.getLeft() && player.body.getLeft() <= this.body.getRight()) ||
-            (player.body.getLeft() <= this.body.getLeft() && player.body.getRight() >= this.body.getRight())
-        )
-        &&
-        (
-            (player.body.getTop() >= this.body.getTop() && player.body.getTop() <= this.body.getBottom()) ||
-            (player.body.getTop() <= this.body.getTop() && player.body.getBottom() >= this.body.getTop())
-        )
-    )
-        return true;
-
-    return false;
+    return areColliding(player, this);
 };
 
 // Update the enemy's position, required method for game
@@ -279,21 +265,7 @@ Star.prototype.render = function() {
 };
 
 Star.prototype.isColliding = function() {
-    if
-    (
-        (
-            (player.body.getLeft() >= this.body.getLeft() && player.body.getLeft() <= this.body.getRight()) ||
-            (player.body.getLeft() <= this.body.getLeft() && player.body.getRight() >= this.body.getRight())
-        )
-        &&
-        (
-            (player.body.getTop() >= this.body.getTop() && player.body.getTop() <= this.body.getBottom()) ||
-            (player.body.getTop() <= this.body.getTop() && player.body.getBottom() >= this.body.getTop())
-        )
-    )
-        return true;
-
-    return false;
+    return areColliding(player, this);
 };
 
 // Now instantiate your objects.
@@ -357,3 +329,21 @@ function collectStar(star) {
     items.splice(index, 1);
     items.push(new Star());
 };
+
+function areColliding(e1, e2) {
+    if
+    (
+        (
+            (e1.body.getLeft() >= e2.body.getLeft() && e1.body.getLeft() <= e2.body.getRight()) ||
+            (e1.body.getLeft() <= e2.body.getLeft() && e1.body.getRight() >= e2.body.getRight())
+        )
+        &&
+        (
+            (e1.body.getTop() >= e2.body.getTop() && e1.body.getTop() <= e2.body.getBottom()) ||
+            (e1.body.getTop() <= e2.body.getTop() && e1.body.getBottom() >= e2.body.getTop())
+        )
+    )
+        return true;
+
+    return false;
+}
